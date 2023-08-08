@@ -13,7 +13,7 @@ from tempfile import NamedTemporaryFile
 from time import sleep
 from sys import platform
 
-whisper_model="small"                     #choices=["tiny", "base", "small", "medium", "large"]
+whisper_model="tiny"                     #choices=["tiny", "base", "small", "medium", "large"]
 
 
 def main():
