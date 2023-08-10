@@ -13,18 +13,17 @@ import os
 load_dotenv()
 
 class text2speech:
-    def __init__(self, gpt_answer):
-        self.gpt_answer = gpt_answer
-        self.characters = []
-        self.voice_message = ""
+    def __init__(self):
+        # self.characters = []
+        # self.voice_message = ""
         self.audio_ctr = 1
         set_api_key(os.getenv("ELEVENLABS_API_KEY"))
 
-    def generate_speech(self):
+    def generate_speech(self, gpt_answer):
         print("Generating speech...")
         audio = generate(
-            text=self.gpt_answer,
-            voice="Bella",
+            text=gpt_answer,
+            voice="MickeyMouse",
             model="eleven_monolingual_v1",
         )
         save(audio, f"./tts/audio/aud{self.audio_ctr}.wav")
