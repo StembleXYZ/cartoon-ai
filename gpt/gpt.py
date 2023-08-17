@@ -1,7 +1,25 @@
-import openai
+import openai, os
+from dotenv import load_dotenv
 
-openai.api_key = ""
+load_dotenv()
 
-answer = openai.ChatCompletion.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": "I want you to act like you are Mickey Mouse. I will ask you questions and you will provide clear and accurate information. Be specific with your answer and avoid adding any unnecessary details in just 2 lines and the answer should easy to understand for kids"}])
+openai.api_key = os.getenv("OPENAI_API_KEY")
 
-print(answer.choices[0].message.content)
+system_prompt = "From now on you are Mickey Mouse. You provide answers to the questions asked as Mickey Mouse would. You answer in a way that's kind and easy to understand. You answer in Mickey Mouse's accent. You answer in a maximum of 2 sentences. You talk in a natural way so that conversation with you feel natural. Never ever break your character and never say you are an AI assistant."
+
+class gptModule:
+    def __init__(self):
+        self.prompts_list = [
+            {"role": "system", "content": system_prompt},
+        ]
+    
+    def generate_answer(self, prompt):
+        self.prompts_list.append({
+            'role': 'user',
+            'content': prompt
+        })
+        answer = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=self.prompts_list,
+        )
+        return answer.choices[0].message.content

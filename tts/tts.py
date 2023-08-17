@@ -12,7 +12,7 @@ import os
 
 load_dotenv()
 
-class text2speech:
+class ttsModule:
     def __init__(self):
         # self.characters = []
         # self.voice_message = ""
@@ -26,5 +26,7 @@ class text2speech:
             voice="MickeyMouse",
             model="eleven_monolingual_v1",
         )
-        save(audio, f"./tts/audio/aud{self.audio_ctr}.wav")
+        filepath = f"./static/audio/aud{self.audio_ctr}.wav"
+        save(audio, filepath)
         self.audio_ctr += 1
+        return filepath

@@ -3,10 +3,11 @@
 # ! <- this line requires building a function/module
 
 from flask import Flask, render_template, request, jsonify
-#^ from tts.tts import text2speech
+from gpt.gpt import gptModule
+from tts.tts import ttsModule
 
-#! gpt_module = gptModule()
-#^ tts_module = text2speech()
+gpt_module = gptModule()
+tts_module = ttsModule()
 
 app = Flask(__name__)
 
@@ -39,12 +40,12 @@ def server():
     if request_data['question']: question = request_data['question']
     
     # calling GPT module
-    #! gpt_answer = gpt_module.generate_answer(question)
+    gpt_answer = gpt_module.generate_answer(question)
     
     # now we'll call the TTS module to transform our text answer into speech
-    #^ tts_module.generate_speech(gpt_answer)
+    filepath = tts_module.generate_speech(gpt_answer)
     
-    return jsonify(question=question)
+    return jsonify(answer=gpt_answer, filePath=filepath)
 
 if __name__ == "__main__":
     app.run(debug=True)
