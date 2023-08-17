@@ -11,12 +11,11 @@ from datetime import datetime, timedelta
 from queue import Queue
 from tempfile import NamedTemporaryFile
 from time import sleep
+import time
 from sys import platform
 
-whisper_model="tiny"                     #choices=["tiny", "base", "small", "medium", "large"]
 
-
-def main():
+def Speech_to_text(whisper_model="tiny"):
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", default=whisper_model, help="Model to use",
                         choices=["tiny", "base", "small", "medium", "large"])
@@ -49,20 +48,21 @@ def main():
     
     # Important for linux users. 
     # Prevents permanent application hang and crash by using the wrong Microphone
-    if 'linux' in platform:
-        mic_name = args.default_microphone
-        if not mic_name or mic_name == 'list':
-            print("Available microphone devices are: ")
-            for index, name in enumerate(sr.Microphone.list_microphone_names()):
-                print(f"Microphone with name \"{name}\" found")   
-            return
-        else:
-            for index, name in enumerate(sr.Microphone.list_microphone_names()):
-                if mic_name in name:
-                    source = sr.Microphone(sample_rate=16000, device_index=index)
-                    break
-    else:
-        source = sr.Microphone(sample_rate=16000)
+    # if 'linux' in platform:
+    #     mic_name = args.default_microphone
+    #     if not mic_name or mic_name == 'list':
+    #         print("Available microphone devices are: ")
+    #         for index, name in enumerate(sr.Microphone.list_microphone_names()):
+    #             print(f"Microphone with name \"{name}\" found")   
+    #         return
+    #     else:
+    #         for index, name in enumerate(sr.Microphone.list_microphone_names()):
+    #             if mic_name in name:
+    #                 global source
+    #                 source = sr.Microphone(sample_rate=16000, device_index=index)
+    #                 break
+    # else:
+    source = sr.Microphone(sample_rate=16000)
         
     # Load / Download model
     model = args.model
@@ -75,7 +75,7 @@ def main():
 
     temp_file = NamedTemporaryFile().name
     transcription = ['']
-    
+
     with source:
         recorder.adjust_for_ambient_noise(source)
 
@@ -94,8 +94,11 @@ def main():
 
     # Cue the user that we're ready to go.
     print("Model loaded.\n")
+    os.system("clear")
 
-    while True:
+    timeout = time.time() + 10              #speak for 5 sec
+
+    while time.time()<timeout:
         try:
             now = datetime.utcnow()
             # Pull raw recorded audio from the queue.
@@ -145,10 +148,7 @@ def main():
         except KeyboardInterrupt:
             break
 
-    print("\n\nTranscription:")
-    for line in transcription:
-        print(line)
-
-
-if __name__ == "__main__":
-    main()
+    # print("\n\nTranscription:")
+    # for line in transcription:
+    #     print(line)
+    return transcription
