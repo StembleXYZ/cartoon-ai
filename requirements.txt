@@ -3,3 +3,5 @@ openai
 openai-whisper
 elevenlabs
 python-dotenv
+PyAudio
+SpeechRecognition
